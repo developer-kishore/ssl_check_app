@@ -1,10 +1,10 @@
 <html>
 <head>
     <title>SSL Expiration Application</title>
-    <link rel = "icon" href ="ssl_logo.png" type = "image/x-icon">
+    <link rel = "icon" href ="pngwing.com.png" type = "image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -13,6 +13,7 @@
 <br>
 <?php
 include 'db_conf.php';
+include_once 'mail.php';
 $conn = OpenCon();
 
 // Check user login or not
@@ -30,20 +31,20 @@ function dateDiffInDays($date1, $date2)
     return abs(round($diff / 86400));
 }
 ?>
-<div class="container col-md-12">
+<div class="container">
 <div class="float-right">
-<label><?php echo $_SESSION['uname'];?></label>   
-<a href="logout.php" type="button" class="btn btn-light">Logout</a> 
+<label><?php echo ucwords($_SESSION['uname']);?></label>   
+<a href="logout.php" type="button" class="btn btn-light fa fa-sign-out">Logout</a> 
 </div>
-<h3 class="text-center">Register Your Domain to SSL Moniter</h3>
+<h3 class="text-center">Register Your Domain for SSL Expire Monitoring</h3>
 <br>
 <form >
   <div class="row">
     <div class="col">
-      <input type="text" class="form-control" placeholder="Enter Project name" name="project_name">
+      <input type="text" class="form-control" placeholder="Enter Project name" name="project_name" required>
     </div>
     <div class="col">
-      <input type="text" class="form-control" placeholder="Enter Domain name" name="domain_name">
+      <input type="text" class="form-control" placeholder="Enter Domain name" name="domain_name" required>
     </div>
     <div class="col">
       <input type="email" class="form-control" placeholder="Enter Email" name="email">
@@ -58,7 +59,7 @@ function dateDiffInDays($date1, $date2)
 </form>
 </div>
 <br>
-<div class="container col-md-12">
+<div class="container">
   <h3 class="text-center">SSL Available Domains</h3>
   <table class="table table-striped" id="ssl_table">
     <thead>
@@ -92,6 +93,18 @@ function dateDiffInDays($date1, $date2)
         if($daysLeft <= $row['days_to_remind']){
           echo'
         <td style="color:red">'.$daysLeft.'</td>';
+        if(!empty($row['email']) && $row['email_sent'] == 0){
+         $mail_status = send_mail($row['email'],ucwords($row['project_name']),$row['domain_name'],$daysLeft,$row['id']);
+         if($mail_status == "sent"){
+          $sql = "UPDATE domain_details SET email_sent = '1' WHERE id='".$row['id']."'";
+
+         if (mysqli_query($conn, $sql)) {
+           //echo "Record updated successfully";
+         } else {
+           echo "Error updating record: " . mysqli_error($conn);
+        }
+        }
+        }
         }else if($daysLeft == 0){
           echo'
           <td style="color:red">SSL Expired</td>';
@@ -102,7 +115,7 @@ function dateDiffInDays($date1, $date2)
         }
         echo'
         <td>
-         <button class="btn btn-danger fas fa-trash delete" data-id='.$row['id'].'>Delete</button>
+         <button class="btn btn-danger fa fa-trash delete" data-id='.$row['id'].'></button>
         </td>
         </tr>';
         }

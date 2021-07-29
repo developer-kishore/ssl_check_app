@@ -41,7 +41,7 @@ function getcert($domain){
     $project_name = isset($_POST['project_name']) ? $_POST['project_name'] : ""; 
     $domain_name = isset($_POST['domain_name']) ? $_POST['domain_name'] : ""; 
     $email = isset($_POST['email']) ? $_POST['email'] : $_POST['email'];
-    $days_to_remind = isset($_POST['days_to_remind']) ? $_POST['days_to_remind'] : 2 ; 
+    $days_to_remind = !empty($_POST['days_to_remind']) ? $_POST['days_to_remind'] : 2 ; 
     $from =  $valid_from->format('Y-m-d H:i:s');
     $to = $valid_to->format('Y-m-d H:i:s'); 
 
