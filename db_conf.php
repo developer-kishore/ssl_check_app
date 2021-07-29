@@ -1,6 +1,7 @@
 <?php
 function OpenCon()
  {
+ session_start();    
  $dbhost = "localhost";
  $dbuser = "root";
  $dbpass = "kishore1234";

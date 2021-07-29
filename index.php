@@ -15,6 +15,11 @@
 include 'db_conf.php';
 $conn = OpenCon();
 
+// Check user login or not
+if(!isset($_SESSION['uname'])){
+  header('Location: index.html');
+}
+
 function dateDiffInDays($date1, $date2) 
 {
     // Calculating the difference in timestamps
@@ -25,8 +30,14 @@ function dateDiffInDays($date1, $date2)
     return abs(round($diff / 86400));
 }
 ?>
-<div class="col-md-12">
-<form>
+<div class="container col-md-12">
+<div class="float-right">
+<label><?php echo $_SESSION['uname'];?></label>   
+<a href="logout.php" type="button" class="btn btn-light">Logout</a> 
+</div>
+<h3 class="text-center">Register Your Domain to SSL Moniter</h3>
+<br>
+<form >
   <div class="row">
     <div class="col">
       <input type="text" class="form-control" placeholder="Enter Project name" name="project_name">
@@ -48,7 +59,7 @@ function dateDiffInDays($date1, $date2)
 </div>
 <br>
 <div class="container col-md-12">
-  <h2 class="text-center">SSL Available Domains</h2>
+  <h3 class="text-center">SSL Available Domains</h3>
   <table class="table table-striped" id="ssl_table">
     <thead>
       <tr>
@@ -136,7 +147,7 @@ $(document).ready(function(){
 $('.delete').click(function(){
   var el = this;
   var deleteid = $(this).data('id');
-  var confirmalert = confirm("Are you sure?");
+  var confirmalert = confirm("Are you sure you want to Delete?");
   if (confirmalert == true) {
      $.ajax({
        url: 'action_page.php',
