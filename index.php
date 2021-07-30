@@ -86,8 +86,16 @@ function dateDiffInDays($date1, $date2)
       echo'
         <tr>  
         <td>'.ucwords($row['project_name']).'</td>
-        <td>'.$row['domain_name'].'</td>
-        <td>'.$row['email'].'</td>
+        <td>'.$row['domain_name'].'</td>';
+        if(!empty($row['email']) && $row['email_sent'] == 1){
+          echo'
+          <td style="color:green">'.$row['email'].'</td>';
+        }
+        else{
+          echo'
+          <td>'.$row['email'].'</td>';
+        }
+        echo'
         <td>'.$row['valid_from'].'</td>
         <td>'.$row['valid_to'].'</td>';
         if($daysLeft <= $row['days_to_remind']){
