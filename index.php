@@ -32,8 +32,11 @@ function dateDiffInDays($date1, $date2)
 }
 ?>
 <div class="container">
+  <div class="float-left">
+  <a  href="expired.php" type="button" class="btn btn-warning fa fa-exclamation-triangle"> Expired</a> 
+  </div>
 <div class="float-right">
-<label class="fa fa-user"> <?php echo ucwords($_SESSION['uname']);?></label>   
+<label class="fa fa-user"> <?php echo ucwords($_SESSION['uname']);?></label> |  
 <a href="logout.php" type="button" class="btn btn-light fa fa-sign-out">Logout</a> 
 </div>
 <h3 class="text-center">Register Your Domain for SSL Expire Monitoring</h3>

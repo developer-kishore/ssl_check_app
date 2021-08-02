@@ -32,6 +32,17 @@ function check_domain($domain){
         echo 0;
         exit;
       }
+   }else if($_POST['act'] == "expired_delete"){
+    if($_POST['id']){
+        // Delete record
+        $query = "DELETE FROM expired_domain WHERE id=".$_POST['id'];
+        mysqli_query($conn,$query);
+        echo 1;
+        exit;
+      }else{
+        echo 0;
+        exit;
+      }
    }
     
     $url = $_POST['domain_name'];//"https://www.seemymd.ca";
