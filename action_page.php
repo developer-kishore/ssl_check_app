@@ -1,5 +1,6 @@
 <?php
 include 'db_conf.php';
+include_once 'mail.php';
 $conn = OpenCon();
 if($conn){
     //echo "Connected Successfully";
@@ -10,7 +11,16 @@ function getcert($domain){
     $cert = stream_context_get_params($read);
     return openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
    }
-   
+//Domain name check   
+function check_domain($domain){
+ if ( gethostbyname($domain) != $domain ) {
+  return "DNS_found";
+ }
+ else {
+  return "NO_DNS_found";
+ }
+}   
+
    if($_POST['act'] == "delete"){
     if($_POST['id']){
         // Delete record
@@ -26,10 +36,37 @@ function getcert($domain){
     
     $url = $_POST['domain_name'];//"https://www.seemymd.ca";
     $now = new DateTime('now', new DateTimeZone('UTC'));
+    $check_domain = check_domain($url);
+    if($check_domain == "DNS_found"){
     $certinfo = getcert($url);
     if (!$certinfo) {
-       echo 'url_failed';
-        
+        $insert = "INSERT INTO expired_domain (project_name,domain_name,email) VALUES ('$_POST[project_name]','$_POST[domain_name]','$_POST[email]')";
+                if(mysqli_query($conn, $insert)) {
+                   // echo "success";
+                   $last_id = mysqli_insert_id($conn);
+                }else{
+                   echo "Error: " . $insert . "<br>" . mysqli_error($conn);
+                }   
+        if(!empty($_POST['email'])){
+            $body = "Dears,<br>";
+            $body .= "We would like to update you that the <b>".$_POST['project_name']."</b> located in the specified domain <br>";
+            $body  .= "".$_POST['domain_name']." ’s SSL certificate was <b>expired.</b> <br>";
+            $body .= "Kindly renewal to avoid the inconvenience. <br><br>";
+            $body .= "Thanks.";
+            $mail_status = send_mail($_POST['email'],$body);
+            if($mail_status == "sent"){
+                $sql = "UPDATE expired_domain SET email_sent = '1' WHERE id='".$last_id."'";
+
+                if (mysqli_query($conn, $sql)) {
+                  //echo "Record updated successfully";
+                } else {
+                  echo "Error updating record: " . mysqli_error($conn);
+               }
+                echo 'url_failed';
+                exit;
+            }
+        }//check email
+        echo 'url_failed';
     }
     else{
     $valid_from = new DateTime("@" . $certinfo['validFrom_time_t']);
@@ -56,6 +93,10 @@ function getcert($domain){
     //echo "Days Left:".$daysLeft;
     }
     //echo json_encode($data);
+}//DNS CHeck
+else{
+    echo "NO_DNS_found";
+}
 }else{
         echo "Connection_Faild";
         }

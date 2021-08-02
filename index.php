@@ -33,7 +33,7 @@ function dateDiffInDays($date1, $date2)
 ?>
 <div class="container">
 <div class="float-right">
-<label><?php echo ucwords($_SESSION['uname']);?></label>   
+<label class="fa fa-user"> <?php echo ucwords($_SESSION['uname']);?></label>   
 <a href="logout.php" type="button" class="btn btn-light fa fa-sign-out">Logout</a> 
 </div>
 <h3 class="text-center">Register Your Domain for SSL Expire Monitoring</h3>
@@ -82,11 +82,12 @@ function dateDiffInDays($date1, $date2)
         if(mysqli_num_rows($result)){
         while($row = mysqli_fetch_assoc($result)){
         $daysLeft = dateDiffInDays($now, $row['valid_to']);
-          
+        $project_name = ucwords($row['project_name']);
+        $domain_name = $row['domain_name'];
       echo'
         <tr>  
-        <td>'.ucwords($row['project_name']).'</td>
-        <td>'.$row['domain_name'].'</td>';
+        <td>'.$project_name.'</td>
+        <td>'.$domain_name.'</td>';
         if(!empty($row['email']) && $row['email_sent'] == 1){
           echo'
           <td style="color:green">'.$row['email'].'</td>';
@@ -102,7 +103,12 @@ function dateDiffInDays($date1, $date2)
           echo'
         <td style="color:red">'.$daysLeft.'</td>';
         if(!empty($row['email']) && $row['email_sent'] == 0){
-         $mail_status = send_mail($row['email'],ucwords($row['project_name']),$row['domain_name'],$daysLeft,$row['id']);
+          $body = "Dears,<br>";
+          $body .= "We would like to update you that the <b>$project_name</b> located in the specified domain <br>";
+          $body  .= "$domain_name ’s SSL certificate is going to be expired in <b>$daysLeft</b> days. <br>";
+          $body .= "Kindly renewal to avoid the inconvenience. <br><br>";
+          $body .= "Thanks.";
+         $mail_status = send_mail($row['email'],$body);
          if($mail_status == "sent"){
           $sql = "UPDATE domain_details SET email_sent = '1' WHERE id='".$row['id']."'";
 
@@ -153,6 +159,8 @@ $('form').on('submit', function (e) {
     success: function (data) {
       if(data == "url_failed"){
         alert("FAILED TO GET CERTIFICATE INFORMATION");
+      }else if(data == "NO_DNS_found"){
+        alert("Domain name not available");
       }else if(data == "success"){
       window.location.reload();
       }else if(data == "Connection_Faild"){

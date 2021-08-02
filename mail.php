@@ -9,12 +9,8 @@ use PHPMailer\PHPMailer\Exception;
 //Load Composer's autoloader
 require 'vendor/autoload.php';
 
-function send_mail($email,$project_name,$domain_name,$days){
-$body = "Dears,<br>";
-$body .= "We would like to update you that the <b>$project_name</b> located in the specified domain <br>";
-$body  .= "$domain_name ’s SSL certificate is going to be expired in <b>$days</b> days. <br>";
-$body .= "Kindly renewal to avoid the inconvenience. <br><br>";
-$body .= "Thanks.";
+function send_mail($email,$body){
+
     //Create an instance; passing `true` enables exceptions
 $mail = new PHPMailer(true);
 
@@ -24,8 +20,8 @@ try {
     $mail->isSMTP();                                            //Send using SMTP
     $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = '';                     //SMTP username
-    $mail->Password   = '';                               //SMTP password
+    $mail->Username   = 'kishore.zeoner@gmail.com';                     //SMTP username
+    $mail->Password   = 'kishore.4422';                               //SMTP password
     $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
     $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
     //Recipients
