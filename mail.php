@@ -20,14 +20,14 @@ try {
     $mail->isSMTP();                                            //Send using SMTP
     $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'kishore.zeoner@gmail.com';                     //SMTP username
-    $mail->Password   = 'kishore.4422';                               //SMTP password
+    $mail->Username   = 'support@vistacan.com';                     //SMTP username
+    $mail->Password   = 'Whitef00t';                               //SMTP password
     $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
     $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
     //Recipients
-    $mail->setFrom('to@example.com', 'SSL Renewal Alert');
+    $mail->setFrom('kishore.zeoner@gmail.com', 'SSL Renewal Alert');
     $mail->addAddress($email, 'Unknown');     //Add a recipient
-    $mail->addCC('cc@example.com');
+    $mail->addCC('vijayalakshmi@zeoner.com');
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'SSL Renewal Alert';
