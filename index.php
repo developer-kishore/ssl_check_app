@@ -32,9 +32,6 @@ function dateDiffInDays($date1, $date2)
 }
 ?>
 <div class="container">
-  <div class="float-left">
-  <a  href="expired.php" type="button" class="btn btn-warning fa fa-exclamation-triangle"> Expired</a> 
-  </div>
 <div class="float-right">
 <label class="fa fa-user"> <?php echo ucwords($_SESSION['uname']);?></label> |  
 <a href="logout.php" type="button" class="btn btn-light fa fa-sign-out">Logout</a> 
@@ -44,16 +41,16 @@ function dateDiffInDays($date1, $date2)
 <form >
   <div class="row">
     <div class="col">
-      <input type="text" class="form-control" placeholder="Enter Project name" name="project_name" required>
+      <input type="text" class="form-control com_class" placeholder="Enter Project name" name="project_name" required>
     </div>
     <div class="col">
-      <input type="text" class="form-control" placeholder="Enter Domain name" name="domain_name" required>
+      <input type="text" class="form-control com_class" placeholder="Enter Domain name" name="domain_name" required>
     </div>
     <div class="col">
-      <input type="email" class="form-control" placeholder="Enter Email" name="email">
+      <input type="email" class="form-control com_class" placeholder="Enter Email" name="email">
     </div>
     <div class="col">
-      <input type="number" class="form-control" placeholder="Days to Remind" name="days_to_remind">
+      <input type="number" class="form-control com_class" placeholder="Days to Remind" name="days_to_remind">
     </div>
     <div class="col">
     <button type="submit" id="add_domain" class="btn btn-primary">Add Domain</button>
@@ -64,6 +61,9 @@ function dateDiffInDays($date1, $date2)
 <br>
 <div class="container">
   <h3 class="text-center">SSL Available Domains</h3>
+  <div class="text-center">
+  <a  href="expired.php" type="button" class="btn btn-danger fa fa-exclamation-triangle"> Expired</a> 
+  </div>
   <table class="table table-striped" id="ssl_table">
     <thead>
       <tr>
@@ -161,7 +161,8 @@ $('form').on('submit', function (e) {
     data: $('form').serialize(),
     success: function (data) {
       if(data == "url_failed"){
-        alert("FAILED TO GET CERTIFICATE INFORMATION");
+        alert("FAILED TO GET CERTIFICATE INFORMATION PLEASE CHECK YOUR MAIL");
+        $(".com_class").val("");
       }else if(data == "NO_DNS_found"){
         alert("Domain name not available");
       }else if(data == "success"){
