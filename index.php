@@ -62,7 +62,7 @@ function dateDiffInDays($date1, $date2)
 <div class="container">
   <h3 class="text-center">SSL Available Domains</h3>
   <div class="text-center">
-  <a  href="expired.php" type="button" class="btn btn-danger fa fa-exclamation-triangle"> Expired</a> 
+  <a  href="expired.php" type="button" class="btn btn-danger fa fa-exclamation-triangle"> View Expired Domain</a> 
   </div>
   <table class="table table-striped" id="ssl_table">
     <thead>
@@ -161,7 +161,7 @@ $('form').on('submit', function (e) {
     data: $('form').serialize(),
     success: function (data) {
       if(data == "url_failed"){
-        alert("FAILED TO GET CERTIFICATE INFORMATION PLEASE CHECK YOUR MAIL");
+        alert("Failed to Get Certification Information. Please Check Your Mail");
         $(".com_class").val("");
       }else if(data == "NO_DNS_found"){
         alert("Domain name not available");
